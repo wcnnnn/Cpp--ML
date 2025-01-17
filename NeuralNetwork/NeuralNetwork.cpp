@@ -355,7 +355,6 @@ public:
             }
             epoch_loss /= num_batches;
             
-            // 每隔一定epoch打印损失
             if(epoch % 1 == 0) {
                 cout << "Epoch " << epoch << ", Loss: " << epoch_loss << endl;
         }
@@ -367,10 +366,9 @@ public:
 
 int main() {
     vector<int> topology = {2, 8, 8, 1};
-    // 减小学习率，增加训练轮数
+    
     NeuralNetwork nn(topology, 4, 0.1);
     
-    // 3. 准备XOR训练数据
     vector<vector<double>> train_data = {
         {0, 0},
         {0, 1},
@@ -385,11 +383,10 @@ int main() {
         {0}
     };
     
-    // 4. 训练网络
+
     cout << "Training started..." << endl;
     nn.train(train_data, targets, 10000, 4);
     
-    // 5. 测试网络
     cout << "\nTesting the network:" << endl;
     for(size_t i = 0; i < train_data.size(); i++) {
         vector<double> output = nn.forward(train_data[i]);
