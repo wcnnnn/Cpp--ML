@@ -11,7 +11,9 @@
 ├── utils/               # 工具类
 │   ├── MatrixOps.h      # 矩阵运算接口
 │   ├── MatrixOps.cpp    # CPU矩阵运算实现
-│   └── MatrixOps.cu     # GPU矩阵运算实现（进行中）
+│   ├── MatrixOpsCUDA.cu # GPU矩阵运算实现
+│   ├── MatrixOpsCUDA.cuh # GPU矩阵运算头文件
+│   └── matrix_benchmark.md # 性能对比文档
 ├── NeuralNetwork/       # 神经网络
 │   ├── NeuralNetwork.cpp # CPU版本实现
 │   ├── NeuralNetwork.cu  # GPU加速版本（进行中）
@@ -38,12 +40,43 @@
   - 包含1D和2D线程索引计算
   - 多块多线程的并行处理示例
 
-### 2. GPU加速矩阵运算 (utils/MatrixOps.cu)
-- 状态：开发中
-- 计划特点：
-  - 基础矩阵运算的GPU加速
-  - 支持CPU和GPU版本的统一接口
-  - 针对大规模矩阵运算优化
+### 2. GPU加速矩阵运算 (utils/MatrixOpsCUDA.cu)
+- 状态：已完成基础实现
+- 实现特点：
+  - 五种基本矩阵运算的GPU加速实现
+    1. 矩阵乘矩阵 (Matrix-Matrix Multiplication)
+    2. 矩阵乘向量 (Matrix-Vector Multiplication)
+    3. 向量乘矩阵 (Vector-Matrix Multiplication)
+    4. 向量点乘 (Vector Dot Product)
+    5. 向量外积 (Vector Outer Product)
+  - 使用CUDA线程块和网格进行并行计算
+  - 针对不同运算采用不同的并行策略
+  - 支持大规模矩阵运算
+  - 实现了性能测试基准
+
+- 性能优化：
+  1. 内存访问优化
+     - 使用一维数组存储，采用行主序
+     - 合理设计线程块大小
+  2. 并行计算优化
+     - 矩阵运算使用2D线程块
+     - 向量运算使用1D线程块
+  3. 规约优化
+     - 向量点乘使用共享内存
+     - 使用原子操作确保结果正确性
+
+- 性能对比：
+  1. 矩阵乘法性能
+     | 矩阵规模 | CPU 时间(ms) | GPU 时间(ms) | 加速比 |
+     |----------|--------------|--------------|--------|
+     | 100x100  | 4           | 167          | 0.024x |
+     | 500x500  | 604         | 10           | 60.4x  |
+     | 1000x1000| 5365        | 53           | 101.2x |
+
+  2. 向量运算性能
+     - 大规模运算（>500维）可获得显著加速
+     - 小规模运算（<500维）CPU性能更优
+     - 保持了高精度（误差<1e-9）
 
 ### 3. 神经网络GPU加速 (NeuralNetwork/NeuralNetwork.cu)
 - 状态：开发中
@@ -113,11 +146,11 @@ nvcc blockandthread.cu -o blockandthread
 ./blockandthread
 
 # 编译GPU加速的矩阵运算
-nvcc utils/MatrixOps.cu -o matrix_ops_gpu
+nvcc utils/MatrixOpsCUDA.cu -o matrix_ops_gpu
 ./matrix_ops_gpu
 
 # 编译GPU加速的神经网络（开发中）
-nvcc NeuralNetwork/NeuralNetwork.cu utils/MatrixOps.cu -o nn_gpu
+nvcc NeuralNetwork/NeuralNetwork.cu utils/MatrixOpsCUDA.cu -o nn_gpu
 ./nn_gpu
 
 # 编译感知机示例
@@ -170,11 +203,22 @@ g++ NeuralNetwork/NeuralNetwork.cpp utils/MatrixOps.cpp -o nn_cpu
 
 ## 性能对比
 
-计划添加以下性能对比：
-1. CPU vs GPU 矩阵运算性能
-2. 神经网络训练速度对比
-3. 不同数据规模下的加速比
-4. 内存使用对比
+### 1. CPU vs GPU 矩阵运算性能
+- 矩阵乘法：
+  - 小规模（<500x500）：CPU更具优势
+  - 大规模（>500x500）：GPU可获得50-100倍加速
+  - 最优规模：1000x1000时达到最佳加速比
+
+- 向量运算：
+  - 点乘：规模>1M时GPU显示优势
+  - 外积：规模>500x500时GPU更优
+  - 数据传输开销是关键因素
+
+### 2. 优化建议
+- 小规模运算（<500维）建议使用CPU实现
+- 大规模运算（>500维）建议使用GPU实现
+- 批量运算时优先考虑GPU实现
+- 需要考虑数据传输开销
 
 ## 贡献指南
 
