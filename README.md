@@ -5,47 +5,62 @@
 ## 项目结构
 
 ```
-.
-├── README.md
-├── blockandthread.cu     # CUDA线程块示例
-├── utils/               # 工具类
-│   ├── Common/          # 通用工具
-│   │   ├── include/     # 头文件
-│   │   │   ├── Activation.h    # 激活函数
-│   │   │   ├── Loss.h         # 损失函数
-│   │   │   └── Optimizer.h    # 优化器
-│   │   └── src/        # 源文件
-│   ├── Layers/         # 网络层实现
-│   │   ├── include/    # 头文件
-│   │   │   └── Layer3D.h      # 3D卷积层
-│   │   └── src/       # 源文件
-│   ├── CNNOps/        # CNN操作
-│   │   ├── include/   # 头文件
-│   │   └── src/      # 源文件
-│   ├── MatrixOps/     # CPU矩阵运算
-│   │   ├── MatrixOps.h
-│   │   └── MatrixOps.cpp
-│   ├── MatrixOpsCUDA/ # GPU矩阵运算
-│   │   ├── MatrixOpsCUDA.cu
-│   │   └── MatrixOpsCUDA.cuh
-│   └── ImageOps/      # 图像处理
-├── CNN/               # 卷积神经网络实现
-│   ├── CNN.cpp       # CNN主实现
-│   └── CNN.md        # CNN文档
-├── NeuralNetwork/    # 全连接神经网络
-│   ├── NeuralNetwork.cpp # CPU版本
-│   ├── NeuralNetwork.cu  # GPU版本（进行中）
-│   └── NeuralNetwork.md  # 实现文档
-├── Perceptron/   # 感知机
-│   ├── Perceptron.cpp
-│   └── Perceptron.md
-├── KNN/          # k近邻法
-│   ├── KNN.cpp
-│   └── KNN.md
-├── NaiveBayes/   # 朴素贝叶斯（进行中）
-├── DecisionTree/ # 决策树（计划中）
-├── SVM/          # 支持向量机（计划中）
-└── RNN/          # 循环神经网络（计划中）
+├── README.md                           # 项目说明文档
+├── blockandthread.cu                   # CUDA线程块示例
+├── utils/                             # 工具类库
+│   ├── Common/                        # 通用工具
+│   │   ├── include/                   # 头文件
+│   │   │   ├── Activation.h          # 激活函数（ReLU、Sigmoid、Tanh、Softmax）
+│   │   │   ├── Loss.h               # 损失函数（MSE、交叉熵）
+│   │   │   └── Optimizer.h          # 优化器（SGD）
+│   │   └── src/                      # 源文件
+│   │       ├── Activation.cpp        # 激活函数实现
+│   │       ├── Loss.cpp             # 损失函数实现
+│   │       └── Optimizer.cpp        # 优化器实现
+│   ├── Layers/                       # 网络层实现
+│   │   ├── include/                  # 头文件
+│   │   │   ├── Layer1D.h            # 1D层定义（全连接层、Dropout层）
+│   │   │   └── Layer3D.h            # 3D卷积层定义（Conv3D、MaxPool3D、Linear3D）
+│   │   └── src/                     # 源文件
+│   │       ├── Layer1D.cpp          # 1D层实现
+│   │       └── Layer3D.cpp          # 3D卷积层实现
+│   ├── CNNOps/                      # CNN操作
+│   │   ├── include/                 # 头文件
+│   │   │   └── CNNOps.h            # CNN基础操作定义
+│   │   └── src/                    # 源文件
+│   │       └── CNNOps.cpp          # CNN基础操作实现（卷积、池化）
+│   ├── MatrixOps/                  # CPU矩阵运算
+│   │   ├── MatrixOps.h            # 矩阵运算接口定义
+│   │   └── MatrixOps.cpp          # 矩阵运算CPU实现
+│   ├── MatrixOpsCUDA/             # GPU矩阵运算
+│   │   ├── MatrixOpsCUDA.cu      # 矩阵运算GPU实现
+│   │   └── MatrixOpsCUDA.cuh     # GPU相关头文件
+│   └── ImageOps/                  # 图像处理（计划中）
+├── CNN/                          # 卷积神经网络实现
+│   ├── CNN.cpp                  # CNN主实现（包含网络结构和训练逻辑）
+│   └── CNN.md                   # CNN实现说明文档
+├── NeuralNetwork/               # 全连接神经网络
+│   ├── NeuralNetwork.cpp       # CPU版本实现
+│   ├── NeuralNetwork.cu        # GPU版本实现（进行中）
+│   └── NeuralNetwork.md        # 神经网络实现说明文档
+├── Perceptron/                 # 感知机
+│   ├── Perceptron.cpp         # 感知机算法实现
+│   └── Perceptron.md          # 感知机说明文档
+├── KNN/                       # k近邻法
+│   ├── KNN.cpp               # KNN算法实现（包含KD树）
+│   └── KNN.md                # KNN说明文档
+├── NaiveBayes/               # 朴素贝叶斯（进行中）
+│   ├── NaiveBayes.cpp       # 朴素贝叶斯实现
+│   └── NaiveBayes.md        # 实现说明文档
+├── DecisionTree/            # 决策树（计划中）
+│   ├── DecisionTree.cpp    # 决策树实现
+│   └── DecisionTree.md     # 实现说明文档
+├── SVM/                    # 支持向量机（计划中）
+│   ├── SVM.cpp            # SVM实现
+│   └── SVM.md             # 实现说明文档
+└── RNN/                   # 循环神经网络（计划中）
+    ├── RNN.cpp           # RNN实现
+    └── RNN.md            # 实现说明文档
 ```
 
 ## 最新更新
