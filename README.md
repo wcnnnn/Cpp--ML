@@ -36,17 +36,16 @@
 │   ├── NeuralNetwork.cpp # CPU版本
 │   ├── NeuralNetwork.cu  # GPU版本（进行中）
 │   └── NeuralNetwork.md  # 实现文档
-└── static/           # 基础机器学习算法
-    ├── Perceptron/   # 感知机
-    │   ├── Perceptron.cpp
-    │   └── Perceptron.md
-    ├── KNN/          # k近邻法
-    │   ├── KNN.cpp
-    │   └── KNN.md
-    ├── NaiveBayes/   # 朴素贝叶斯（进行中）
-    ├── DecisionTree/ # 决策树（计划中）
-    ├── SVM/          # 支持向量机（计划中）
-    └── RNN/          # 循环神经网络（计划中）
+├── Perceptron/   # 感知机
+│   ├── Perceptron.cpp
+│   └── Perceptron.md
+├── KNN/          # k近邻法
+│   ├── KNN.cpp
+│   └── KNN.md
+├── NaiveBayes/   # 朴素贝叶斯（进行中）
+├── DecisionTree/ # 决策树（计划中）
+├── SVM/          # 支持向量机（计划中）
+└── RNN/          # 循环神经网络（计划中）
 ```
 
 ## 最新更新
