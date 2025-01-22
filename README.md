@@ -9,28 +9,66 @@
 ├── README.md
 ├── blockandthread.cu     # CUDA线程块示例
 ├── utils/               # 工具类
-│   ├── MatrixOps.h      # 矩阵运算接口
-│   ├── MatrixOps.cpp    # CPU矩阵运算实现
-│   ├── MatrixOpsCUDA.cu # GPU矩阵运算实现
-│   ├── MatrixOpsCUDA.cuh # GPU矩阵运算头文件
-│   └── matrix_benchmark.md # 性能对比文档
-├── NeuralNetwork/       # 神经网络
-│   ├── NeuralNetwork.cpp # CPU版本实现
-│   ├── NeuralNetwork.cu  # GPU加速版本（进行中）
+│   ├── Common/          # 通用工具
+│   │   ├── include/     # 头文件
+│   │   │   ├── Activation.h    # 激活函数
+│   │   │   ├── Loss.h         # 损失函数
+│   │   │   └── Optimizer.h    # 优化器
+│   │   └── src/        # 源文件
+│   ├── Layers/         # 网络层实现
+│   │   ├── include/    # 头文件
+│   │   │   └── Layer3D.h      # 3D卷积层
+│   │   └── src/       # 源文件
+│   ├── CNNOps/        # CNN操作
+│   │   ├── include/   # 头文件
+│   │   └── src/      # 源文件
+│   ├── MatrixOps/     # CPU矩阵运算
+│   │   ├── MatrixOps.h
+│   │   └── MatrixOps.cpp
+│   ├── MatrixOpsCUDA/ # GPU矩阵运算
+│   │   ├── MatrixOpsCUDA.cu
+│   │   └── MatrixOpsCUDA.cuh
+│   └── ImageOps/      # 图像处理
+├── CNN/               # 卷积神经网络实现
+│   ├── CNN.cpp       # CNN主实现
+│   └── CNN.md        # CNN文档
+├── NeuralNetwork/    # 全连接神经网络
+│   ├── NeuralNetwork.cpp # CPU版本
+│   ├── NeuralNetwork.cu  # GPU版本（进行中）
 │   └── NeuralNetwork.md  # 实现文档
-├── static/
-│   ├── Perceptron/      # 感知机
-│   │   ├── Perceptron.cpp
-│   │   └── Perceptron.md
-│   ├── KNN/             # k近邻法
-│   │   ├── KNN.cpp
-│   │   └── KNN.md
-│   ├── NaiveBayes/      # 朴素贝叶斯（进行中）
-│   ├── CNN/             # 卷积神经网络（计划中）
-│   ├── RNN/             # 循环神经网络（计划中）
-│   ├── DecisionTree/    # 决策树（计划中）
-│   └── SVM/             # 支持向量机（计划中）
+└── static/           # 基础机器学习算法
+    ├── Perceptron/   # 感知机
+    │   ├── Perceptron.cpp
+    │   └── Perceptron.md
+    ├── KNN/          # k近邻法
+    │   ├── KNN.cpp
+    │   └── KNN.md
+    ├── NaiveBayes/   # 朴素贝叶斯（进行中）
+    ├── DecisionTree/ # 决策树（计划中）
+    ├── SVM/          # 支持向量机（计划中）
+    └── RNN/          # 循环神经网络（计划中）
 ```
+
+## 最新更新
+
+### 1. CNN模块更新
+- 实现3D卷积层，支持多通道输入输出
+- 添加批量训练支持
+- 实现交叉熵损失函数
+- 优化内存管理和性能
+- 完整的二分类示例实现
+
+### 2. 工具类改进
+- 重构为模块化设计
+- 分离通用组件（激活函数、损失函数、优化器）
+- 实现3D卷积和池化操作
+- 增强代码复用性
+
+### 3. 性能优化
+- 优化矩阵运算
+- 改进梯度计算
+- 提升内存效率
+- 支持批量处理
 
 ## CUDA并行计算示例
 
@@ -44,89 +82,75 @@
 - 状态：已完成基础实现
 - 实现特点：
   - 五种基本矩阵运算的GPU加速实现
-    1. 矩阵乘矩阵 (Matrix-Matrix Multiplication)
-    2. 矩阵乘向量 (Matrix-Vector Multiplication)
-    3. 向量乘矩阵 (Vector-Matrix Multiplication)
-    4. 向量点乘 (Vector Dot Product)
-    5. 向量外积 (Vector Outer Product)
   - 使用CUDA线程块和网格进行并行计算
-  - 针对不同运算采用不同的并行策略
   - 支持大规模矩阵运算
   - 实现了性能测试基准
 
-- 性能优化：
-  1. 内存访问优化
-     - 使用一维数组存储，采用行主序
-     - 合理设计线程块大小
-  2. 并行计算优化
-     - 矩阵运算使用2D线程块
-     - 向量运算使用1D线程块
-  3. 规约优化
-     - 向量点乘使用共享内存
-     - 使用原子操作确保结果正确性
-
-- 性能对比：
-  1. 矩阵乘法性能
-     | 矩阵规模 | CPU 时间(ms) | GPU 时间(ms) | 加速比 |
-     |----------|--------------|--------------|--------|
-     | 100x100  | 4           | 167          | 0.024x |
-     | 500x500  | 604         | 10           | 60.4x  |
-     | 1000x1000| 5365        | 53           | 101.2x |
-
-  2. 向量运算性能
-     - 大规模运算（>500维）可获得显著加速
-     - 小规模运算（<500维）CPU性能更优
-     - 保持了高精度（误差<1e-9）
-
-### 3. 神经网络GPU加速 (NeuralNetwork/NeuralNetwork.cu)
-- 状态：开发中
-- 计划特点：
-  - 前向传播的GPU加速
-  - 反向传播的并行计算
-  - 批量训练的GPU优化
-  - 与CPU版本的性能对比
-
 ## 已实现算法
 
-### 1. 感知机 (Perceptron)
-- 实现文件：`static/Perceptron/Perceptron.cpp`
-- 文档说明：`static/Perceptron/Perceptron.md`
+### 1. 卷积神经网络 (CNN)
+- 实现文件：`CNN/CNN.cpp`
+- 文档说明：`CNN/CNN.md`
 - 实现特点：
-  - 原始形式感知机算法
-  - 使用C++ STL容器
-  - 支持可配置的学习率和最大迭代次数
-  - 包含AND门的实例演示
+  - 支持3D卷积层（多通道输入输出）
+  - 实现最大池化层
+  - 支持全连接层
+  - 实现多种激活函数（ReLU、Softmax等）
+  - 支持交叉熵损失函数
+  - 实现批量训练
+  - 支持随机梯度下降优化器
 
-### 2. K近邻法 (KNN)
-- 实现文件：`static/KNN/KNN.cpp`
-- 文档说明：`static/KNN/KNN.md`
-- 实现特点：
-  - 使用KD树优化近邻搜索
-  - 支持多种距离度量方法（欧氏距离、曼哈顿距离、切比雪夫距离）
-  - 实现数据标准化（Z-score和Min-Max方法）
-  - 包含分类任务的完整示例
-  - 支持批量预测和准确率计算
-
-### 3. 神经网络 (Neural Network)
+### 2. 神经网络 (Neural Network)
 - CPU实现：`NeuralNetwork/NeuralNetwork.cpp`
 - GPU实现：`NeuralNetwork/NeuralNetwork.cu`（进行中）
-- 文档说明：`NeuralNetwork/NeuralNetwork.md`
 - 实现特点：
   - 支持多层前馈神经网络
-  - 实现多种激活函数（Sigmoid、ReLU、Tanh、Softmax）
+  - 实现多种激活函数（Sigmoid、ReLU、Tanh）
   - 支持批量训练
-  - 包含矩阵运算工具类
   - 实现了XOR问题的完整示例
-  - 支持Dropout正则化
-  - GPU加速支持（开发中）
 
-### 4. 朴素贝叶斯 (Naive Bayes)
+### 3. 感知机 (Perceptron)
+- 实现文件：`static/Perceptron/Perceptron.cpp`
+- 实现特点：
+  - 原始形式感知机算法
+  - 支持可配置的学习率
+  - 包含AND门的实例演示
+
+### 4. K近邻法 (KNN)
+- 实现文件：`static/KNN/KNN.cpp`
+- 实现特点：
+  - 使用KD树优化近邻搜索
+  - 支持多种距离度量方法
+  - 实现数据标准化
+
+### 5. 朴素贝叶斯 (Naive Bayes)
 - 状态：正在实现中
 - 计划特点：
   - 支持离散和连续特征
   - 实现多种概率分布模型
   - 支持拉普拉斯平滑
-  - 文本分类示例
+
+## 工具类库
+
+### 1. Common
+- 激活函数：ReLU、Sigmoid、Tanh、Softmax
+- 损失函数：MSE、交叉熵
+- 优化器：随机梯度下降（SGD）
+
+### 2. Layers
+- Layer3D：支持3D卷积、池化和全连接操作
+- 支持前向传播和反向传播
+- 实现参数更新和梯度计算
+
+### 3. CNNOps
+- 实现卷积操作
+- 实现池化操作
+- 支持多通道处理
+
+### 4. MatrixOps
+- CPU和GPU矩阵运算实现
+- 基础矩阵操作
+- 优化的数值计算
 
 ## 开发环境
 
@@ -143,54 +167,38 @@
 ```bash
 # 编译CUDA示例
 nvcc blockandthread.cu -o blockandthread
-./blockandthread
 
-# 编译GPU加速的矩阵运算
-nvcc utils/MatrixOpsCUDA.cu -o matrix_ops_gpu
-./matrix_ops_gpu
+# 编译CNN
+g++ -std=c++11 CNN/CNN.cpp utils/Common/src/*.cpp utils/Layers/src/*.cpp utils/CNNOps/*.cpp utils/MatrixOps/*.cpp -I. -Iutils -o CNN/cnn.exe
 
-# 编译GPU加速的神经网络（开发中）
-nvcc NeuralNetwork/NeuralNetwork.cu utils/MatrixOpsCUDA.cu -o nn_gpu
-./nn_gpu
+# 编译神经网络
+g++ -std=c++11 NeuralNetwork/NeuralNetwork.cpp utils/MatrixOps/*.cpp -o NeuralNetwork/neural_network.exe
 
 # 编译感知机示例
-g++ static/Perceptron/Perceptron.cpp -o perceptron
-./perceptron
+g++ Perceptron/Perceptron.cpp -o perceptron
 
 # 编译KNN示例
-g++ static/KNN/KNN.cpp -o knn
-./knn
-
-# 编译CPU版本神经网络
-g++ NeuralNetwork/NeuralNetwork.cpp utils/MatrixOps.cpp -o nn_cpu
-./nn_cpu
+g++ KNN/KNN.cpp -o knn
 ```
 
 ## 待实现功能
 
-1. CUDA并行计算
-   - [x] 线程块基础示例
-   - [x] 矩阵运算GPU加速（进行中）
-   - [x] 神经网络GPU加速（进行中）
-   - [ ] 卷积运算GPU加速
-   - [ ] 批量数据处理优化
+1. CNN增强
+   - [ ] 添加更多层类型
+   - [ ] 支持模型保存和加载
+   - [ ] 添加数据增强
+   - [ ] GPU加速支持
 
-2. 基础机器学习算法
-   - [x] 感知机
-   - [x] K近邻法
-   - [ ] 朴素贝叶斯（进行中）
+2. 深度学习模型
+   - [ ] RNN实现
+   - [ ] LSTM实现
+   - [ ] Transformer实现
+
+3. 基础算法
    - [ ] 决策树
-   - [ ] 支持向量机（SVM）
+   - [ ] 支持向量机
    - [ ] 随机森林
    - [ ] GBDT
-   - [ ] XGBoost
-
-3. 深度学习算法
-   - [x] 神经网络
-   - [ ] CNN（计划中）
-   - [ ] RNN（计划中）
-   - [ ] LSTM
-   - [ ] Transformer
 
 4. 工程改进
    - [ ] 添加CMake构建系统
@@ -199,7 +207,6 @@ g++ NeuralNetwork/NeuralNetwork.cpp utils/MatrixOps.cpp -o nn_cpu
    - [ ] 支持数据集加载
    - [ ] 添加交叉验证
    - [ ] 可视化支持
-   - [x] GPU加速支持（进行中）
 
 ## 性能对比
 
@@ -209,16 +216,10 @@ g++ NeuralNetwork/NeuralNetwork.cpp utils/MatrixOps.cpp -o nn_cpu
   - 大规模（>500x500）：GPU可获得50-100倍加速
   - 最优规模：1000x1000时达到最佳加速比
 
-- 向量运算：
-  - 点乘：规模>1M时GPU显示优势
-  - 外积：规模>500x500时GPU更优
-  - 数据传输开销是关键因素
-
 ### 2. 优化建议
 - 小规模运算（<500维）建议使用CPU实现
 - 大规模运算（>500维）建议使用GPU实现
 - 批量运算时优先考虑GPU实现
-- 需要考虑数据传输开销
 
 ## 贡献指南
 
@@ -237,7 +238,7 @@ MIT License
 
 1. 《机器学习》- 周志华
 2. 《深度学习》- Ian Goodfellow
-3. C++ 参考手册
-4. C++ STL 文档
+3. 《神经网络与深度学习》- 邱锡鹏
+4. C++ 参考手册
 5. CUDA Programming Guide
 6. CUDA Best Practices Guide 
